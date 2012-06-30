@@ -9,7 +9,7 @@
     "url": "https://github.com/farmdawgnation/wepay-node.git"
   },
   "dependencies": {
-
+    "restler": ">=2.0.1"
   },
   "devDependencies": {
 
