@@ -1,0 +1,21 @@
+{
+  "name": "wepay-node",
+  "version": "0.1.0",
+  "author": "Matt Farmer <matt@frmr.me>",
+  "description": "Node implementation of the WePay API.",
+  "main": "./lib/wepay-node",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/farmdawgnation/wepay-node.git"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+
+  },
+  "license": "Apache",
+  "engine": {
+    "node": ">=0.6.14"
+  }
+}
