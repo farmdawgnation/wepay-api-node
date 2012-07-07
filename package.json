@@ -1,8 +1,12 @@
 {
   "name": "wepay-node",
-  "version": "0.1.0",
-  "author": "Matt Farmer <matt@frmr.me>",
+  "version": "0.1.0-snapshot",
+  "author": "Matt Farmer <matt@frmr.me> (http://farmdawgnation.com)",
   "description": "Node implementation of the WePay API.",
+  "keywords": ["wepay", "payments", "credit card"],
+  "homepage": "http://farmdawgnation.github.com/wepay-node/",
+  "bugs": {url: 'https://github.com/farmdawgnation/wepay-node/issues'},
+  "files": ["./lib", "./test"],
   "main": "./lib/wepay-node",
   "repository": {
     "type": "git",
@@ -15,8 +19,8 @@
     "vows": ">= 0.6.3"
   },
   "license": "Apache",
-  "engine": {
-    "node": ">=0.6.14"
+  "engines": {
+    {"node": ">=0.6.14"}
   },
   "scripts": {
     "test": "vows --spec"
