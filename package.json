@@ -12,7 +12,7 @@
     "restler": ">=2.0.1"
   },
   "devDependencies": {
-
+    "vows": ">= 0.6.3"
   },
   "license": "Apache",
   "engine": {
