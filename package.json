@@ -17,5 +17,8 @@
   "license": "Apache",
   "engine": {
     "node": ">=0.6.14"
+  },
+  "scripts": {
+    "test": "vows --spec"
   }
 }
