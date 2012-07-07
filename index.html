@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>WePay API for Node by farmdawgnation</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>WePay API for Node</h1>
+          <h2>A Node.js library for WePay payment processing.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/farmdawgnation/wepay-api-node/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/farmdawgnation/wepay-api-node/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/farmdawgnation/wepay-api-node" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h3>About the Project</h3>
+
+<p>While working on some WePay stuff for my employer in Scala, I was also having conversations with an old college buddy about potentially pursuing a side project that would involve payment processing. Since I've been a fan of doing node stuff on the side, and I was already familiar with <a href="http://www.wepay.com">WePay</a>'s excellent API, I decided to just write a little node module to provide the functionality in a spectacularly simple way.</p>
+
+<h3>Getting It</h3>
+
+<p>If you're interested in using wepay-api in an application, you can get a copy of it from NPM. The current 0.1.0-snapshot is live on NPM and can be retrieved by running:</p>
+
+<pre><code>npm install wepay-api
+</code></pre>
+
+<p>... or by adding the following dependency to your package.json:</p>
+
+<div class="highlight">
+<pre><span class="p">{</span> <span class="s2">"wepay-api"</span><span class="o">:</span> <span class="s2">"&gt;= 0.1.0-snapshot"</span> <span class="p">}</span>
+</pre>
+</div>
+
+
+<h3>Using It</h3>
+
+<p>The wepay-api library is designed to be as straightforward as possible to use. Everything you need is in the WePay singleton that you require. So, by doing this somewhere toward the top of your module:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">WePay</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'wepay-api'</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>... you should get everything you need. After this point you'll need to init the WePay object so it knows how to talk to the server. That is done by calling the singleton's init method whose signature looks like this:</p>
+
+<div class="highlight">
+<pre><span class="nx">WePay</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span>
+  <span class="nx">environment</span><span class="p">,</span>
+  <span class="nx">client_id</span><span class="p">,</span> 
+  <span class="nx">client_secret</span><span class="p">,</span>
+  <span class="nx">oauth_redirect_uri</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>The parameters are pretty simple:</p>
+
+<ul>
+<li>
+<strong>environment</strong> (string) should be either 'stage' or 'prod'.</li>
+<li>
+<strong>client_id</strong> (int) The client ID provided to your app by WePay.</li>
+<li>
+<strong>client_secret</strong> (string) The client secret provided to your app by WePay.</li>
+<li>
+<strong>oauth_redirect_uri</strong> (string) The return url for OAuth calls. This is where WePay directs users to after they grant access to your application. The OAuth code you can use to get their access token will be passed in as a GET argument in the query string.</li>
+</ul><p>If that sounds like greek, you should take a look at the <a href="https://www.wepay.com/developer">WePay API docs</a>.</p>
+
+<h4>Authorizing</h4>
+
+<p>To start an OAuth sequence call <code>WePay.authorizeUrl</code> and pass in the comma separated list of <a href="https://www.wepay.com/developer/reference/permissions">permissions</a> you want to request. It will generate the URL you need to redirect your user to. When the user is directed back to your application, pass the code you got from WePay into the <code>WePay.retrieveToken</code> method with a callback to handle the token object that comes back.</p>
+
+<p>You'll want to stuff the token object somewhere where you can get at it later. You're going to need it for pretty much every request you do on behalf of that user, after all.</p>
+
+<p>Example:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">WePay</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s2">"collect_payments"</span><span class="p">);</span>
+
+<span class="c1">// Redirect that user to the URL. Then when their browser</span>
+<span class="c1">// kicks them back to you, you should run something like</span>
+<span class="kd">var</span> <span class="nx">token_object</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="nx">WePay</span><span class="p">.</span><span class="nx">retrieveToken</span><span class="p">(</span><span class="nx">codePassedInFromWePay</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">token</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Something went wrong.</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">token_object</span> <span class="o">=</span> <span class="nx">token</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h4>Instances and Resources</h4>
+
+<p>In this library, we have the concept of an instance and a resource. A resource is the tunnel by which you can access objects on the WePay server. An instance is an actual object that represents something on the WePay server. With the exception of the App resource, every resource has a companion instance. So, the Checkout resource has a CheckoutInstance class that it returns for its instances. The Resources typically implement <code>.get</code>, <code>.find</code>, and <code>.create</code> methods to allow you to retrieve or create instances as you need to. When you want to persist changes in an instance back to WePay, you call <code>.save</code> on that instance.</p>
+
+<h4>Making Resource Calls</h4>
+
+<p>To make an API call against a resource on WePay, access the singleton for that resource under the WePay singleton. As a very basic example, this is how you would retrieve an Account from the server:</p>
+
+<div class="highlight">
+<pre><span class="nx">WePay</span><span class="p">.</span><span class="nx">Account</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">account_id</span><span class="p">,</span> <span class="nx">token_object</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">account</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Do something.</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>This would get you an AccountInstance object. If you wanted to create a new account and then save it to the server, you would write:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">acct</span> <span class="o">=</span> <span class="nx">WePay</span><span class="p">.</span><span class="nx">Account</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">token_object</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">"Test Account"</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">"Test description."</span>
+<span class="p">});</span>
+
+<span class="nx">acct</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">saveResult</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Do something with the result like check for errors or</span>
+  <span class="c1">// save the account ID of the new account.</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Do note that the call to <code>save</code> is actually what persists the Account object it to the server. The create call only creates the object in memory. The function names that I use in this project are intended to (more or less) directly mimmic those on the WePay server.</p>
+
+<h3>About Me</h3>
+
+<p>My name is Matt Farmer, also known as <a href="http://twitter.com/farmdawgnation">@farmdawgnation</a>. I'm a Software Engineer at <a href="http://openstudy.com">OpenStudy</a>, where we build clever ways of disrupting the status quo in Educational Technology, fly remote controlled helicopters (that can shoot each other down!), and occasionally debate whether or not a hot dog is a sandwich. Occasionally, I <a href="http://farmdawgnation.com">blog about stuff</a>.</p>
+        </section>
+
+        <footer>
+          WePay API for Node is maintained by <a href="https://github.com/farmdawgnation">farmdawgnation</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
