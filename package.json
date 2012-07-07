@@ -1,16 +1,16 @@
 {
-  "name": "wepay-node",
+  "name": "wepay-api",
   "version": "0.1.0-snapshot",
   "author": "Matt Farmer <matt@frmr.me> (http://farmdawgnation.com)",
   "description": "Node implementation of the WePay API.",
   "keywords": ["wepay", "payments", "credit card"],
-  "homepage": "http://farmdawgnation.github.com/wepay-node/",
-  "bugs": {url: 'https://github.com/farmdawgnation/wepay-node/issues'},
+  "homepage": "http://farmdawgnation.github.com/wepay-api-node/",
+  "bugs": {url: 'https://github.com/farmdawgnation/wepay-api-node/issues'},
   "files": ["./lib", "./test"],
-  "main": "./lib/wepay-node",
+  "main": "./lib/wepay",
   "repository": {
     "type": "git",
-    "url": "https://github.com/farmdawgnation/wepay-node.git"
+    "url": "https://github.com/farmdawgnation/wepay-api-node.git"
   },
   "dependencies": {
     "restler": ">=2.0.1"
