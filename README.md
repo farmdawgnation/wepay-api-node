@@ -23,9 +23,8 @@ there hasn't been a dev release yet, that's the best way to go for now.
 
 ## Version Numbers
 
-The versioning of the application is, in some respects, similar to how
-node versioning works, and consists of a major version number, a minor
-version number, and a patch number. Odd numbers in the minor version
-number indicates a development release. An increase in development
-patch numbers *can* introduce significant changes, while patch number increases
-in stable releases will only be bug fixes.
+This application mostly follows semantic versioning. Changes in the patch number
+simply represent small changes (usually bugfixes). Changes in the minor
+version number represent potentially breaking changes and new features
+without any major changes to the API structure. The major version changing
+signifies me thinking this project has reached a superb level of maturity.
